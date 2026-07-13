@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Приглашение на свидание 🌸</title>
+    <style>
+        :root {
+            --pink-bg: #fff0f5;
+            --pink-main: #ff69b4;
+            --pink-dark: #ff1493;
+            --pink-light: #ffe4e1;
+            --text-color: #4a4a4a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--pink-bg);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(255, 105, 180, 0.15);
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+            min-height: 350px;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .card.active {
+            display: flex;
+        }
+
+        h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: var(--text-color);
+        }
+
+        .btn {
+            background-color: var(--pink-main);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 10px rgba(255, 105, 180, 0.3);
+        }
+
+        .btn:hover {
+            background-color: var(--pink-dark);
+            transform: scale(1.05);
+        }
+
+        /* Экран 1: Кнопки ДА/НЕТ */
+        .btn-container {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+            position: relative;
+            width: 100%;
+            justify-content: center;
+        }
+
+        #btn-no {
+            background-color: #ccc;
+            color: #666;
+            box-shadow: none;
+            position: absolute;
+            transition: all 0.1s ease;
+        }
+
+        /* Экран 2: Календарь и время */
+        .input-group {
+            width: 100%;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #777;
+        }
+
+        input[type="date"], input[type="time"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--pink-light);
+            border-radius: 10px;
+            font-size: 16px;
+            outline: none;
+            color: var(--text-color);
+        }
+
+        input:focus {
+            border-color: var(--pink-main);
+        }
+
+        /* Экран 3: Выбор еды */
+        .food-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .food-option {
+            border: 2px solid var(--pink-light);
+            padding: 15px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 16px;
+        }
+
+        .food-option:hover {
+            background-color: var(--pink-light);
+        }
+
+        .food-option.selected {
+            border-color: var(--pink-main);
+            background-color: #fff0f5;
+            font-weight: bold;
+        }
+
+        .food-emoji {
+            font-size: 28px;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        /* Финальный экран */
+        .summary-box {
+            background: var(--pink-bg);
+            padding: 15px;
+[13.07.2026 16:55] Данюлька😮‍💨: border-radius: 15px;
+            width: 100%;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .summary-item {
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        .summary-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .footnote {
+            font-size: 11px;
+            color: #aaa;
+            margin-top: 15px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card active" id="step-1">
+        <h2>🌸 Пойдешь со мной на свидание? 🌸</h2>
+        <div class="btn-container" style="min-height: 60px;">
+            <button class="btn" id="btn-yes">ДА! ❤️</button>
+            <button class="btn" id="btn-no">Нет 😢</button>
+        </div>
+    </div>
+
+    <div class="card" id="step-2">
+        <h2>Итак... когда ты свободна? 📅🐾</h2>
+        <div class="input-group">
+            <label>Выбери день:</label>
+            <input type="date" id="date-picker">
+        </div>
+        <div class="input-group">
+            <label>Выбери время:</label>
+            <input type="time" id="time-picker">
+        </div>
+        <button class="btn" id="btn-to-step3" style="margin-top: 15px;">Выбрать 💖</button>
+    </div>
+
+    <div class="card" id="step-3">
+        <h2>Что мы будем кушать? 🍕✨</h2>
+        <div class="food-grid">
+            <div class="food-option" data-food="Пицца">
+                <span class="food-emoji">🍕</span> Пицца
+            </div>
+            <div class="food-option" data-food="Суши">
+                <span class="food-emoji">🍣</span> Суши
+            </div>
+            <div class="food-option" data-food="Бургеры">
+                <span class="food-emoji">🍔</span> Бургеры
+            </div>
+            <div class="food-option" data-food="Паста">
+                <span class="food-emoji">🍝</span> Паста
+            </div>
+            <div class="food-option" data-food="Тако">
+                <span class="food-emoji">🌮</span> Тако
+            </div>
+            <div class="food-option" data-food="Рамен">
+                <span class="food-emoji">🍜</span> Рамен
+            </div>
+        </div>
+        <button class="btn" id="btn-to-step4" disabled style="opacity: 0.5;">Далее 💕</button>
+    </div>
+
+    <div class="card" id="step-4">
+        <h2>УРА!! 🎉💖</h2>
+        <div class="summary-box">
+            <div class="summary-item">📅 <strong>Дата:</strong> <span id="summary-date"></span></div>
+            <div class="summary-item">⏰ <strong>Время:</strong> <span id="summary-time"></span></div>
+            <div class="summary-item">🍽️ <strong>Еда:</strong> <span id="summary-food"></span></div>
+        </div>
+        <h3>Я уже не могу дождаться! 🌹✨</h3>
+        <p class="footnote">(обычные парни пишут смс, а крутые программисты создают сайты 😉)</p>
+    </div>
+
+    <script>
+        // Данные для финала
+        let selectedDate = "";
+        let selectedTime = "";
+        let selectedFood = "";
+
+        // Навигация между экранами
+        function navigate(from, to) {
+            document.getElementById(from).classList.remove('active');
+            document.getElementById(to).classList.add('active');
+        }
+
+        // --- ЛОГИКА ЭКРАНА 1 (Убегающая кнопка) ---
+        const btnNo = document.getElementById('btn-no');
+        const btnYes = document.getElementById('btn-yes');
+
+        function moveButton() {
+            // Случайные координаты внутри карточки
+            const card = document.getElementById('step-1');
+            const maxX = card.clientWidth - btnNo.clientWidth - 40;
+            const maxY = card.clientHeight - btnNo.clientHeight - 80;
+            
+            const randomX = Math.floor(Math.random() * maxX) + 20;
+            const randomY = Math.floor(Math.random() * maxY) + 20;
+
+            btnNo.style.left = randomX + 'px';
+            btnNo.style.top = randomY + 'px';
+        }
+
+        btnNo.addEventListener('mouseenter', moveButton);
+        btnNo.addEventListener('click', moveButton); // на случай клика с телефона
+
+        btnYes.addEventListener('click', () => {
+[13.07.2026 16:55] Данюлька😮‍💨: navigate('step-1', 'step-2');
+        });
+
+        // --- ЛОГИКА ЭКРАНА 2 ---
+        document.getElementById('btn-to-step3').addEventListener('click', () => {
+            const dateInput = document.getElementById('date-picker').value;
+            const timeInput = document.getElementById('time-picker').value;
+
+            if (!dateInput || !timeInput) {
+                alert("Пожалуйста, выбери дату и время! Свидание само себя не запланирует ✍️");
+                return;
+            }
+
+            // Форматируем дату для красоты
+            const dateObj = new Date(dateInput);
+            selectedDate = dateObj.toLocaleDateString('ru-RU', { weekday: 'long', month: 'long', day: 'numeric' });
+            selectedTime = timeInput;
+
+            navigate('step-2', 'step-3');
+        });
+
+        // --- ЛОГИКА ЭКРАНА 3 ---
+        const foodOptions = document.querySelectorAll('.food-option');
+        const btnToStep4 = document.getElementById('btn-to-step4');
+
+        foodOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                // Убираем выделение со всех и добавляем текущему
+                foodOptions.forEach(opt => opt.classList.remove('selected'));
+                option.classList.add('selected');
+                
+                selectedFood = option.getAttribute('data-food');
+                
+                // Активируем кнопку "Далее"
+                btnToStep4.disabled = false;
+                btnToStep4.style.opacity = "1";
+            });
+        });
+
+        document.getElementById('btn-to-step4').addEventListener('click', () => {
+            // Заполняем финальный экран
+            document.getElementById('summary-date').innerText = selectedDate;
+            document.getElementById('summary-time').innerText = selectedTime;
+            document.getElementById('summary-food').innerText = selectedFood;
+
+            navigate('step-3', 'step-4');
+        });
+    </script>
+</body>
+</html>

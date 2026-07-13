@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -28,17 +28,18 @@
             align-items: center;
             min-height: 100vh;
             padding: 20px;
+            overflow: hidden; /* Чтобы не появлялась прокрутка, когда кнопка убегает */
         }
 
         .card {
             background: white;
-            padding: 30px;
+            padding: 40px 30px;
             border-radius: 20px;
             box-shadow: 0 10px 25px rgba(255, 105, 180, 0.15);
             text-align: center;
             max-width: 400px;
             width: 100%;
-            min-height: 350px;
+            min-height: 380px;
             display: none;
             flex-direction: column;
             justify-content: center;
@@ -51,51 +52,70 @@
         }
 
         h2 {
-            font-size: 24px;
-            margin-bottom: 20px;
+            font-size: 26px;
+            margin-bottom: 30px;
             color: var(--text-color);
+            line-height: 1.3;
         }
 
         .btn {
             background-color: var(--pink-main);
             color: white;
             border: none;
-            padding: 12px 30px;
+            padding: 14px 35px;
             font-size: 18px;
             font-weight: bold;
-            border-radius: 25px;
+            border-radius: 30px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: background-color 0.2s ease, transform 0.1s ease;
             box-shadow: 0 4px 10px rgba(255, 105, 180, 0.3);
+            white-space: nowrap; /* Чтобы текст не переносился */
         }
 
         .btn:hover {
             background-color: var(--pink-dark);
-            transform: scale(1.05);
+        }
+        
+        .btn:active {
+            transform: scale(0.95);
         }
 
-        /* Экран 1: Кнопки ДА/НЕТ */
+        /* --- Исправленный ЭКРАН 1 --- */
+        #step-1 {
+            /* Фиксированная высота для карточки, чтобы кнопка "Нет" не улетала за её пределы */
+            height: 380px; 
+        }
+
         .btn-container {
             display: flex;
-            gap: 20px;
+            gap: 25px; /* Расстояние между кнопками */
             margin-top: 20px;
-            position: relative;
             width: 100%;
             justify-content: center;
+            align-items: center;
+            position: relative; /* Относительное позиционирование для контейнера */
+            height: 60px; /* Фиксированная высота для зоны кнопок */
         }
 
+        /* Изначально кнопка "Нет" позиционируется статично в flex-контейнере */
         #btn-no {
-            background-color: #ccc;
+            background-color: #f0f0f0;
             color: #666;
-            box-shadow: none;
-            position: absolute;
-            transition: all 0.1s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            position: static; /* Важно: изначально static */
+            z-index: 10;
+        }
+        
+        /* Когда JS добавляет этот класс, кнопка "взлетает" */
+        #btn-no.runaway {
+            position: absolute; /* Теперь она позиционируется относительно .btn-container */
+            transition: all 0.15s ease-out; /* Плавное убегание */
         }
 
-        /* Экран 2: Календарь и время */
+        /* --- ЛОГИКА ОСТАЛЬНЫХ ЭКРАНОВ --- */
         .input-group {
             width: 100%;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             text-align: left;
         }
 
@@ -103,94 +123,109 @@
             display: block;
             font-size: 14px;
             font-weight: 600;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             color: #777;
         }
 
         input[type="date"], input[type="time"] {
             width: 100%;
-            padding: 12px;
+            padding: 14px;
             border: 2px solid var(--pink-light);
-            border-radius: 10px;
+            border-radius: 12px;
             font-size: 16px;
             outline: none;
             color: var(--text-color);
-        }
+            background-color: #fff;
+[13.07.2026 17:10] Данюлька😮‍💨: }
 
         input:focus {
             border-color: var(--pink-main);
+            box-shadow: 0 0 0 3px rgba(255, 105, 180, 0.1);
         }
 
-        /* Экран 3: Выбор еды */
+        /* Выбор еды */
         .food-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 15px;
             width: 100%;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
         .food-option {
+            background: #fff;
             border: 2px solid var(--pink-light);
             padding: 15px;
             border-radius: 15px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.2s ease;
             font-size: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
         .food-option:hover {
             background-color: var(--pink-light);
+            border-color: var(--pink-light);
         }
 
         .food-option.selected {
             border-color: var(--pink-main);
             background-color: #fff0f5;
             font-weight: bold;
+            transform: scale(1.03);
+            box-shadow: 0 5px 15px rgba(255, 105, 180, 0.1);
         }
 
         .food-emoji {
-            font-size: 28px;
+            font-size: 32px;
             display: block;
             margin-bottom: 5px;
         }
 
-        /* Финальный экран */
+        /* Финал */
         .summary-box {
             background: var(--pink-bg);
-            padding: 15px;
-[13.07.2026 16:55] Данюлька😮‍💨: border-radius: 15px;
+            padding: 20px;
+            border-radius: 15px;
             width: 100%;
-            margin: 20px 0;
+            margin: 25px 0;
             text-align: left;
+            border: 1px solid var(--pink-light);
         }
 
         .summary-item {
-            margin-bottom: 10px;
-            font-size: 16px;
+            margin-bottom: 12px;
+            font-size: 17px;
+            display: flex;
+            align-items: center;
         }
-        .summary-item:last-child {
-            margin-bottom: 0;
-        }
+        .summary-item strong { margin-right: 8px; color: #555; }
+        .summary-item:last-child { margin-bottom: 0; }
 
         .footnote {
-            font-size: 11px;
+            font-size: 12px;
             color: #aaa;
-            margin-top: 15px;
+            margin-top: 20px;
             font-style: italic;
+            line-height: 1.4;
         }
     </style>
 </head>
 <body>
 
+    <!-- ЭКРАН 1: Вопрос -->
     <div class="card active" id="step-1">
         <h2>🌸 Пойдешь со мной на свидание? 🌸</h2>
-        <div class="btn-container" style="min-height: 60px;">
+        <div class="btn-container">
             <button class="btn" id="btn-yes">ДА! ❤️</button>
             <button class="btn" id="btn-no">Нет 😢</button>
         </div>
     </div>
 
+    <!-- ЭКРАН 2: Дата/Время -->
     <div class="card" id="step-2">
         <h2>Итак... когда ты свободна? 📅🐾</h2>
         <div class="input-group">
@@ -201,9 +236,10 @@
             <label>Выбери время:</label>
             <input type="time" id="time-picker">
         </div>
-        <button class="btn" id="btn-to-step3" style="margin-top: 15px;">Выбрать 💖</button>
+        <button class="btn" id="btn-to-step3" style="margin-top: 10px;">Далее 💖</button>
     </div>
 
+    <!-- ЭКРАН 3: Еда -->
     <div class="card" id="step-3">
         <h2>Что мы будем кушать? 🍕✨</h2>
         <div class="food-grid">
@@ -226,17 +262,18 @@
                 <span class="food-emoji">🍜</span> Рамен
             </div>
         </div>
-        <button class="btn" id="btn-to-step4" disabled style="opacity: 0.5;">Далее 💕</button>
+        <button class="btn" id="btn-to-step4" disabled style="opacity: 0.5; width: 100%;">Готово 💕</button>
     </div>
 
+    <!-- ЭКРАН 4: Финал -->
     <div class="card" id="step-4">
         <h2>УРА!! 🎉💖</h2>
         <div class="summary-box">
-            <div class="summary-item">📅 <strong>Дата:</strong> <span id="summary-date"></span></div>
+[13.07.2026 17:10] Данюлька😮‍💨: <div class="summary-item">📅 <strong>Дата:</strong> <span id="summary-date"></span></div>
             <div class="summary-item">⏰ <strong>Время:</strong> <span id="summary-time"></span></div>
             <div class="summary-item">🍽️ <strong>Еда:</strong> <span id="summary-food"></span></div>
         </div>
-        <h3>Я уже не могу дождаться! 🌹✨</h3>
+        <h3 style="color: var(--pink-dark);">Я уже не могу дождаться! 🌹✨</h3>
         <p class="footnote">(обычные парни пишут смс, а крутые программисты создают сайты 😉)</p>
     </div>
 
@@ -252,28 +289,56 @@
             document.getElementById(to).classList.add('active');
         }
 
-        // --- ЛОГИКА ЭКРАНА 1 (Убегающая кнопка) ---
+        // --- ЛОГИКА ЭКРАНА 1 (Убегающая кнопка - ИСПРАВЛЕНО) ---
         const btnNo = document.getElementById('btn-no');
         const btnYes = document.getElementById('btn-yes');
+        const btnContainer = document.querySelector('.btn-container');
 
-        function moveButton() {
-            // Случайные координаты внутри карточки
-            const card = document.getElementById('step-1');
-            const maxX = card.clientWidth - btnNo.clientWidth - 40;
-            const maxY = card.clientHeight - btnNo.clientHeight - 80;
+        function moveButton(e) {
+            // При первом наведении переключаем позиционирование на absolute
+            if (!btnNo.classList.contains('runaway')) {
+                btnNo.classList.add('runaway');
+            }
+
+            // Вычисляем область, в которой кнопка может бегать (внутри .btn-container)
+            // Добавим отступы, чтобы кнопка не прилипала к краям контейнера
+            const padding = 10;
+            const maxX = btnContainer.clientWidth - btnNo.clientWidth - padding * 2;
+            const maxY = btnContainer.clientHeight - btnNo.clientHeight - padding * 2;
             
-            const randomX = Math.floor(Math.random() * maxX) + 20;
-            const randomY = Math.floor(Math.random() * maxY) + 20;
+            // Генерируем случайные координаты
+            let randomX = Math.floor(Math.random() * maxX) + padding;
+            let randomY = Math.floor(Math.random() * maxY) + padding;
 
+            // Блиц-проверка: если новая позиция слишком близко к курсору, 
+            // пробуем сгенерировать еще раз (простой вариант)
+            const mouseX = e.offsetX || e.clientX - btnNo.getBoundingClientRect().left;
+            const mouseY = e.offsetY || e.clientY - btnNo.getBoundingClientRect().top;
+
+            if (Math.abs(randomX - mouseX) < 40 && Math.abs(randomY - mouseY) < 40) {
+                 randomX = Math.floor(Math.random() * maxX) + padding;
+                 randomY = Math.floor(Math.random() * maxY) + padding;
+            }
+
+            // Применяем координаты
             btnNo.style.left = randomX + 'px';
             btnNo.style.top = randomY + 'px';
         }
 
+        // Обработка наведения (для ПК) и клика (для телефона)
         btnNo.addEventListener('mouseenter', moveButton);
-        btnNo.addEventListener('click', moveButton); // на случай клика с телефона
+        btnNo.addEventListener('click', (e) => {
+            if (!btnNo.classList.contains('runaway')) {
+                // Если каким-то чудом кликнули до того, как она стала runaway
+                moveButton(e);
+            } else {
+                // Если кликнули, когда она уже runaway, просто перемещаем снова
+                moveButton(e);
+            }
+        }); 
 
         btnYes.addEventListener('click', () => {
-[13.07.2026 16:55] Данюлька😮‍💨: navigate('step-1', 'step-2');
+            navigate('step-1', 'step-2');
         });
 
         // --- ЛОГИКА ЭКРАНА 2 ---
@@ -282,16 +347,19 @@
             const timeInput = document.getElementById('time-picker').value;
 
             if (!dateInput || !timeInput) {
-                alert("Пожалуйста, выбери дату и время! Свидание само себя не запланирует ✍️");
+                alert("Пожалуйста, выбери дату и время! ✍️");
                 return;
             }
 
             // Форматируем дату для красоты
             const dateObj = new Date(dateInput);
-            selectedDate = dateObj.toLocaleDateString('ru-RU', { weekday: 'long', month: 'long', day: 'numeric' });
+            const options = { weekday: 'long', month: 'long', day: 'numeric' };
+            selectedDate = dateObj.toLocaleDateString('ru-RU', options);
+            // Делаем первую букву дня недели заглавной
+            selectedDate = selectedDate.charAt(0).toUpperCase() + selectedDate.slice(1);
+            
             selectedTime = timeInput;
-
-            navigate('step-2', 'step-3');
+[13.07.2026 17:10] Данюлька😮‍💨: navigate('step-2', 'step-3');
         });
 
         // --- ЛОГИКА ЭКРАНА 3 ---
@@ -306,14 +374,14 @@
                 
                 selectedFood = option.getAttribute('data-food');
                 
-                // Активируем кнопку "Далее"
+                // Активируем кнопку "Готово"
                 btnToStep4.disabled = false;
                 btnToStep4.style.opacity = "1";
             });
         });
 
         document.getElementById('btn-to-step4').addEventListener('click', () => {
-            // Заполняем финальный экран
+            // Заполняем финальный экран данными
             document.getElementById('summary-date').innerText = selectedDate;
             document.getElementById('summary-time').innerText = selectedTime;
             document.getElementById('summary-food').innerText = selectedFood;
